@@ -1,15 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { PortEnvs, NastEnvs } from './config';
+import { NastEnvs } from './config';
 import {
   RpcCustomExceptionFilter,
   BadRequestCustomExceptionFilter,
 } from './common';
 
 async function bootstrap() {
-  const logger = new Logger('Main');
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
@@ -33,6 +32,5 @@ async function bootstrap() {
   );
 
   await app.listen();
-  logger.log(`Microservice running on port ${PortEnvs.port}`);
 }
 bootstrap();
