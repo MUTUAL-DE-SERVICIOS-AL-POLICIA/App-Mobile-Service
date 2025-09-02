@@ -9,7 +9,7 @@ config();
 export const options: DataSourceOptions & SeederOptions = {
   type: 'postgres' as const,
   host: DbEnvs.dbHost,
-  port:  DbEnvs.dbPort,
+  port: DbEnvs.dbPort,
   database: DbEnvs.dbDatabase,
   username: DbEnvs.dbUsername,
   password: DbEnvs.dbPassword,

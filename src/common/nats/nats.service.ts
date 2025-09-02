@@ -13,7 +13,9 @@ export class NatsService {
     return (
       params &&
       typeof params === 'object' &&
-      Object.values(params).some((value) => value !== null && value !== undefined)
+      Object.values(params).some(
+        (value) => value !== null && value !== undefined,
+      )
     );
   }
 
@@ -27,13 +29,28 @@ export class NatsService {
               serviceStatus: true,
             };
           }
+
+          if (
+            typeof response === 'string' ||
+            typeof response === 'number' ||
+            typeof response === 'boolean'
+          ) {
+            return {
+              data: response,
+              serviceStatus: true,
+            };
+          }
+
           return {
             ...response,
             serviceStatus: true,
           };
         }),
         catchError((error) => {
-          this.logger.error(`Error calling microservice: ${service}`, error.message);
+          this.logger.error(
+            `Error calling microservice: ${service}`,
+            error.message,
+          );
           return of({
             serviceStatus: false,
             message: 'Microservice call failed',

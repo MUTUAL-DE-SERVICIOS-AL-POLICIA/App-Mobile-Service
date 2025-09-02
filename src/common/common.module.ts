@@ -1,9 +1,14 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { NATS_SERVICE, NastEnvs } from 'src/config';
 import { NatsService } from './nats/nats.service';
+import { RecordService, Record } from './records';
+import { CommonController } from './common.controller';
+
 @Global()
 @Module({
+  controllers: [CommonController],
   imports: [
     ClientsModule.register([
       {
@@ -14,8 +19,9 @@ import { NatsService } from './nats/nats.service';
         },
       },
     ]),
+    TypeOrmModule.forFeature([Record]),
   ],
-  providers: [NatsService],
+  providers: [NatsService, RecordService],
   exports: [
     ClientsModule.register([
       {
@@ -27,6 +33,7 @@ import { NatsService } from './nats/nats.service';
       },
     ]),
     NatsService,
+    RecordService,
   ],
 })
 export class CommonModule {}
