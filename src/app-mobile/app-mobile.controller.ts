@@ -4,9 +4,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class AppMobileController {
-  constructor(
-    private readonly appMobileService: AppMobileService,
-  ) {}
+  constructor(private readonly appMobileService: AppMobileService) {}
 
   @MessagePattern('appMobile.contributions.allContributions')
   allContributions(@Payload('affiliateId', ParseIntPipe) affiliateId: number) {

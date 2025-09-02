@@ -10,9 +10,16 @@ export class RecordService {
     private readonly recordRepository: Repository<Record>,
   ) {}
 
-  async create(action: string, description?: string, metadata?: any): Promise<Record> {
-    const record = this.recordRepository.create({ action, description, metadata });
+  async create(
+    action: string,
+    description?: string,
+    metadata?: any,
+  ): Promise<Record> {
+    const record = this.recordRepository.create({
+      action,
+      description,
+      metadata,
+    });
     return await this.recordRepository.save(record);
   }
-
 }

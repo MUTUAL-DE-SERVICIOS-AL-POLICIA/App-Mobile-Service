@@ -33,7 +33,7 @@ import { CommonController } from './common.controller';
       },
     ]),
     NatsService,
-    RecordService
+    RecordService,
   ],
 })
 export class CommonModule {}

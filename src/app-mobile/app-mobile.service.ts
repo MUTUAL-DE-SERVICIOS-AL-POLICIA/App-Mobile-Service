@@ -204,7 +204,6 @@ export class AppMobileService {
         firebaseToken: firebaseToken,
       });
     }
-
     await this.tokenRepository.save(token);
 
     return {

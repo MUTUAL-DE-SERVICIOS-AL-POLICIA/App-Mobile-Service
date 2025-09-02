@@ -4,7 +4,7 @@ import { RecordService } from 'src/common/records';
 
 @Controller()
 export class CommonController {
-  constructor(private readonly recordService: RecordService,) {}
+  constructor(private readonly recordService: RecordService) {}
 
   @MessagePattern('appMobile.record.create')
   allContributions(
@@ -14,5 +14,4 @@ export class CommonController {
   ) {
     return this.recordService.create(action, description, metadata);
   }
-  
 }
