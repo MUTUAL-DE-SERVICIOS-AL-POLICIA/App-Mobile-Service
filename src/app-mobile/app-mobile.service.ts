@@ -239,16 +239,16 @@ export class AppMobileService {
 
     const stores: Record<string, { url: string; validVersions: string[] }> = {
       playstore: {
-        url: 'https://play.google.com/store/apps/details?id=com.muserpol.pvt',
-        validVersions: ['3.0.8', '3.0.9'],
+        url: 'https://play.google.com/store/app3.0.8s/details?id=com.muserpol.pvt',
+        validVersions: ['4.0.1'],
       },
       appstore: {
         url: 'https://apps.apple.com/app/id284815942',
-        validVersions: ['2.2.1'],
+        validVersions: ['4.0.1'],
       },
       appgallery: {
         url: 'https://appgallery.huawei.com/app/C106440831',
-        validVersions: ['3.0.5', '3.0.6', '3.0.7', '3.0.8'],
+        validVersions: ['4.0.1'],
       },
     };
 
