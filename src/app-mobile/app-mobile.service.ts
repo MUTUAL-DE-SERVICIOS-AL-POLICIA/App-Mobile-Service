@@ -306,6 +306,7 @@ export class AppMobileService {
     }
 
     token.apiToken = null;
+    token.firebaseToken = null;
     token.updatedAt = new Date();
     await this.tokenRepository.save(token);
 
