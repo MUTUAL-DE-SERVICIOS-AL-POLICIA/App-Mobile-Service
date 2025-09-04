@@ -15,8 +15,12 @@ export class AppMobileService {
     private readonly nats: NatsService,
   ) {}
 
-  async allContributions(affiliateId: number): Promise<any> {
+  async allContributions(
+    authorization: string,
+    affiliateId: number,
+  ): Promise<any> {
     const data = await this.nats.firstValue('pvtSti.allContributions', {
+      authorization,
       affiliateId,
     });
 
@@ -29,8 +33,12 @@ export class AppMobileService {
     return data;
   }
 
-  async contributionsPassive(affiliateId: number): Promise<any> {
+  async contributionsPassive(
+    authorization: string,
+    affiliateId: number,
+  ): Promise<any> {
     const response = await this.nats.firstValue('pvtSti.contributionsPassive', {
+      authorization,
       affiliateId,
     });
 
@@ -57,8 +65,12 @@ export class AppMobileService {
     };
   }
 
-  async contributionsActive(affiliateId: number): Promise<any> {
+  async contributionsActive(
+    authorization: string,
+    affiliateId: number,
+  ): Promise<any> {
     const response = await this.nats.firstValue('pvtSti.contributionsActive', {
+      authorization,
       affiliateId,
     });
 
@@ -115,8 +127,12 @@ export class AppMobileService {
     };
   }
 
-  async informationLoan(affiliateId: number): Promise<any> {
+  async informationLoan(
+    authorization: string,
+    affiliateId: number,
+  ): Promise<any> {
     const data = await this.nats.firstValue('pvtSti.informationLoan', {
+      authorization,
       affiliateId,
     });
 
@@ -129,8 +145,9 @@ export class AppMobileService {
     return data;
   }
 
-  async loanPrintPlan(loanId: number): Promise<any> {
+  async loanPrintPlan(authorization: string, loanId: number): Promise<any> {
     const response = await this.nats.firstValue('pvtSti.loanPrintPlan', {
+      authorization,
       loanId,
     });
 
@@ -157,8 +174,9 @@ export class AppMobileService {
     };
   }
 
-  async loanPrintKardex(loanId: number): Promise<any> {
+  async loanPrintKardex(authorization: string, loanId: number): Promise<any> {
     const response = await this.nats.firstValue('pvtSti.loanPrintKardex', {
+      authorization,
       loanId,
     });
 
