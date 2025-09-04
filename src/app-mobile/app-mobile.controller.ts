@@ -7,22 +7,33 @@ export class AppMobileController {
   constructor(private readonly appMobileService: AppMobileService) {}
 
   @MessagePattern('appMobile.contributions.allContributions')
-  allContributions(@Payload('affiliateId', ParseIntPipe) affiliateId: number) {
-    return this.appMobileService.allContributions(affiliateId);
+  allContributions(
+    @Payload('authorization') authorization: string,
+    @Payload('affiliateId', ParseIntPipe) affiliateId: number,
+  ) {
+    return this.appMobileService.allContributions(authorization, affiliateId);
   }
 
   @MessagePattern('appMobile.contributions.contributionsPassive')
   contributionsPassive(
+    @Payload('authorization') authorization: string,
     @Payload('affiliateId', ParseIntPipe) affiliateId: number,
   ) {
-    return this.appMobileService.contributionsPassive(affiliateId);
+    return this.appMobileService.contributionsPassive(
+      authorization,
+      affiliateId,
+    );
   }
 
   @MessagePattern('appMobile.contributions.contributionsActive')
   contributionsActive(
+    @Payload('authorization') authorization: string,
     @Payload('affiliateId', ParseIntPipe) affiliateId: number,
   ) {
-    return this.appMobileService.contributionsActive(affiliateId);
+    return this.appMobileService.contributionsActive(
+      authorization,
+      affiliateId,
+    );
   }
 
   @MessagePattern('appMobile.global.cities')
@@ -31,18 +42,27 @@ export class AppMobileController {
   }
 
   @MessagePattern('appMobile.loans.informationLoan')
-  informationLoan(@Payload('affiliateId', ParseIntPipe) affiliateId: number) {
-    return this.appMobileService.informationLoan(affiliateId);
+  informationLoan(
+    @Payload('authorization') authorization: string,
+    @Payload('affiliateId', ParseIntPipe) affiliateId: number,
+  ) {
+    return this.appMobileService.informationLoan(authorization, affiliateId);
   }
 
   @MessagePattern('appMobile.loans.loanPrintPlan')
-  loanPrintPlan(@Payload('loanId', ParseIntPipe) loanId: number) {
-    return this.appMobileService.loanPrintPlan(loanId);
+  loanPrintPlan(
+    @Payload('authorization') authorization: string,
+    @Payload('loanId', ParseIntPipe) loanId: number,
+  ) {
+    return this.appMobileService.loanPrintPlan(authorization, loanId);
   }
 
   @MessagePattern('appMobile.loans.loanPrintKardex')
-  loanPrintKardex(@Payload('loanId', ParseIntPipe) loanId: number) {
-    return this.appMobileService.loanPrintKardex(loanId);
+  loanPrintKardex(
+    @Payload('authorization') authorization: string,
+    @Payload('loanId', ParseIntPipe) loanId: number,
+  ) {
+    return this.appMobileService.loanPrintKardex(authorization, loanId);
   }
 
   @MessagePattern('appMobile.refreshToken')
