@@ -7,7 +7,7 @@ export class CommonController {
   constructor(private readonly recordService: RecordService) {}
 
   @MessagePattern('appMobile.record.create')
-  allContributions(
+  create(
     @Payload('action') action: string,
     @Payload('description') description: string,
     @Payload('metadata') metadata: any,
