@@ -302,10 +302,17 @@ export class AppMobileService {
       };
     }
 
+    const affiliateId = token.affiliateId;
+    const person = await this.nats.firstValue('person.getPersonIdByAffiliate', {
+      affiliateId,
+    });
+
     return {
       error: false,
       message: 'Token encontrado, Usuario autorizado',
-      affiliateId: token.affiliateId,
+      fullname: person.fullname,
+      personId: person.personId,
+      affiliateId,
       tokenId: token.id,
     };
   }
@@ -330,7 +337,9 @@ export class AppMobileService {
 
     return {
       error: false,
-      message: 'Token eliminado, Cierre de sesión exitoso',
+      message:
+        'Token eliminado, Cierre de sesión exitoso del afiliado con ID ' +
+        affiliateId,
     };
   }
 
