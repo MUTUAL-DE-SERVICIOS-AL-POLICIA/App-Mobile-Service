@@ -303,10 +303,9 @@ export class AppMobileService {
     }
 
     const affiliateId = token.affiliateId;
-    const person = await this.nats.firstValue(
-      'person.getPersonIdByAffiliate',
-      {affiliateId},
-    );
+    const person = await this.nats.firstValue('person.getPersonIdByAffiliate', {
+      affiliateId,
+    });
 
     return {
       error: false,
@@ -338,7 +337,9 @@ export class AppMobileService {
 
     return {
       error: false,
-      message: 'Token eliminado, Cierre de sesión exitoso del afiliado con ID ' + affiliateId,
+      message:
+        'Token eliminado, Cierre de sesión exitoso del afiliado con ID ' +
+        affiliateId,
     };
   }
 
