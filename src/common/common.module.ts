@@ -2,8 +2,11 @@ import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NATS_SERVICE, NastEnvs } from 'src/config';
 import { NatsService } from './nats/nats.service';
+import { CommonController } from './common.controller';
+
 @Global()
 @Module({
+  controllers: [CommonController],
   imports: [
     ClientsModule.register([
       {

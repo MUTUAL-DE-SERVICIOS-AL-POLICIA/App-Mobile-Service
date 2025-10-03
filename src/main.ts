@@ -9,7 +9,6 @@ import {
 } from './common';
 
 async function bootstrap() {
-
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
