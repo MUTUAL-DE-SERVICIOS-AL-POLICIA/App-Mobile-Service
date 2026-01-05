@@ -346,7 +346,7 @@ export class PreEvaluationService {
    * Obtiene hasta 3 contribuciones recientes (últimos 3 meses) de un afiliado
    * 
    * @description Consulta y procesa las contribuciones más recientes del afiliado directamente
-   * desde el Loans-Service, filtrando solo aquellas dentro de los últimos 3 meses que tengan 
+   * desde el Contributions-Service, filtrando solo aquellas dentro de los últimos 3 meses que tengan 
    * valor cotizable > 0. Los montos se formatean en formato europeo (punto para miles, coma para decimales).
    * 
    * @param authorization - Token de autorización (no usado actualmente, mantenido por compatibilidad)
@@ -364,14 +364,14 @@ export class PreEvaluationService {
    * }
    * ```
    * 
-   * @performance Optimizado con consulta directa a Loans-Service y filtrado eficiente
+   * @performance Optimizado con consulta directa a Contributions-Service y filtrado eficiente
    */
   async getRecentContributions(authorization: string, affiliateId: number): Promise<any> {
     try {
       this.logger.debug(`Obteniendo contribuciones recientes para affiliateId: ${affiliateId}`);
 
-      // OPTIMIZACIÓN: Obtener contribuciones directamente desde Loans-Service
-      const contributionsResponse = await this.nats.firstValue('LoansContributions.findByAffiliateId', affiliateId);
+      // OPTIMIZACIÓN: Obtener contribuciones directamente desde Contributions-Service
+      const contributionsResponse = await this.nats.firstValue('Contributions.findByAffiliateId', affiliateId);
 
       console.log(`[PreEvaluationService] Respuesta recibida:`, {
         tipo: typeof contributionsResponse,
@@ -460,7 +460,7 @@ export class PreEvaluationService {
 
   /**
    * Procesa datos de contribuciones y filtra las 3 más recientes dentro de 3 meses
-   * @param contributions - Array de contribuciones desde Loans-Service
+   * @param contributions - Array de contribuciones desde Contributions-Service
    * @param affiliateId - ID del afiliado
    * @returns Contribuciones recientes procesadas
    */
