@@ -4,7 +4,6 @@ import {
   LoanModalityResponseDto,
   LoanParametersDto,
 } from './dto/pre-evaluation.dto';
-import { RetirementFundAveragesService } from './retirement_fund_averages/retirement_fund_averages.service';
 
 /**
  * Servicio de Evaluación Referencial de Préstamos
@@ -42,7 +41,6 @@ export class PreEvaluationService {
 
   constructor(
     private readonly nats: NatsService,
-    private readonly retirementFundAveragesService: RetirementFundAveragesService,
   ) { }
 
   // ===========================
@@ -605,8 +603,11 @@ export class PreEvaluationService {
         };
       }
 
-      // Obtener promedio usando el servicio
-      const result = await this.retirementFundAveragesService.findByDegreeAndCategory(degreeId, categoryId);
+      // Obtener promedio usando NATS (ahora en Global-Service)
+      const result = await this.nats.firstValue('retirementFundAverages.findByDegreeAndCategory', {
+        degreeId,
+        categoryId
+      });
 
       if (!result.serviceStatus || !result.data) {
         this.logger.warn(`No se encontró promedio para degreeId: ${degreeId}, categoryId: ${categoryId}`);
