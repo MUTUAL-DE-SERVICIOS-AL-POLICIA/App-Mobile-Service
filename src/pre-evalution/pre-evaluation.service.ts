@@ -72,7 +72,7 @@ export class PreEvaluationService {
     try {
       const affiliate = await this.nats.firstValue('affiliate.findOneData', { affiliateId });
 
-      if (!affiliate?.id) {
+      if (!affiliate?.serviceStatus) {
         this.logger.error(`No se encontró información del afiliado ${affiliateId}`);
         throw new Error('Afiliado no encontrado');
       }
@@ -369,7 +369,7 @@ export class PreEvaluationService {
       this.logger.debug(`Obteniendo contribuciones recientes para affiliateId: ${affiliateId}`);
 
       // OPTIMIZACIÓN: Obtener contribuciones directamente desde Contributions-Service
-      const contributionsResponse = await this.nats.firstValue('Contributions.findByAffiliateId', affiliateId);
+      const contributionsResponse = await this.nats.firstValue('contributions.findByAffiliateId', affiliateId);
 
       console.log(`[PreEvaluationService] Respuesta recibida:`, {
         tipo: typeof contributionsResponse,
@@ -584,7 +584,7 @@ export class PreEvaluationService {
       // Obtener datos del afiliado
       const affiliate = await this.nats.firstValue('affiliate.findOneData', { affiliateId });
 
-      if (!affiliate || !affiliate.id) {
+      if (!affiliate?.serviceStatus) {
         this.logger.error(`No se encontró información del afiliado ${affiliateId}`);
         throw new Error('Afiliado no encontrado');
       }
