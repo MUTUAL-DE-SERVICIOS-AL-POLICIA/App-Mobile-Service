@@ -258,15 +258,15 @@ export class AppMobileService {
     const stores: Record<string, { url: string; validVersions: string[] }> = {
       playstore: {
         url: 'https://play.google.com/store/apps/details?id=com.muserpol.pvt',
-        validVersions: ['4.1.1','4.1.2'],
+        validVersions: ['4.1.2','4.1.3'],
       },
       appstore: {
         url: 'https://apps.apple.com/app/id284815942',
-        validVersions: ['4.1.1','4.1.2'],
+        validVersions: ['4.1.2','4.1.3'],
       },
       appgallery: {
         url: 'https://appgallery.huawei.com/app/C106440831',
-        validVersions: ['4.1.1','4.1.2'],
+        validVersions: ['4.1.2','4.1.3'],
       },
     };
 
