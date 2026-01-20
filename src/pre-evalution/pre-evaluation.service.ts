@@ -371,19 +371,10 @@ export class PreEvaluationService {
       // OPTIMIZACIÓN: Obtener contribuciones directamente desde Contributions-Service
       const contributionsResponse = await this.nats.firstValue('contributions.findByAffiliateId', affiliateId);
 
-      console.log(`[PreEvaluationService] Respuesta recibida:`, {
-        tipo: typeof contributionsResponse,
-        esArray: Array.isArray(contributionsResponse),
-        tieneData: !!contributionsResponse?.data,
-        dataEsArray: Array.isArray(contributionsResponse?.data)
-      });
-
       // Extraer el array de contribuciones (puede venir directo o en .data)
       let contributions = Array.isArray(contributionsResponse) 
         ? contributionsResponse 
         : contributionsResponse?.data || [];
-
-      console.log(`[PreEvaluationService] Contribuciones extraídas: ${contributions.length}`);
 
       if (!Array.isArray(contributions) || contributions.length === 0) {
         this.logger.warn(`No se encontraron contribuciones para affiliateId: ${affiliateId}`);
@@ -400,12 +391,8 @@ export class PreEvaluationService {
         };
       }
 
-      console.log(`[PreEvaluationService] Procesando ${contributions.length} contribuciones`);
-
       // Procesar y filtrar las contribuciones
       const processedData = this.processRecentContributions(contributions, affiliateId);
-
-      console.log(`[PreEvaluationService] Datos procesados:`, processedData);
 
       return {
         error: "false",
@@ -469,13 +456,6 @@ export class PreEvaluationService {
     threeMonthsAgo.setMonth(currentDate.getMonth() - 3);
     const threeMonthsAgoTime = threeMonthsAgo.getTime();
 
-    console.log(`[ProcessContributions] Fecha actual: ${currentDate.toISOString()}`);
-    console.log(`[ProcessContributions] Hace 3 meses: ${threeMonthsAgo.toISOString()}`);
-    console.log(`[ProcessContributions] Total contribuciones: ${contributions.length}`);
-    if (contributions.length > 0) {
-      console.log(`[ProcessContributions] Primera contribución:`, contributions[0]);
-    }
-
     // OPTIMIZACIÓN: Procesar contribuciones de forma más eficiente
     const recentContributions = contributions
       .filter((contribution: any) => {
@@ -483,16 +463,6 @@ export class PreEvaluationService {
         const quotableValue = Number(contribution.quotable) || 0;
         const isInRange = contributionTime >= threeMonthsAgoTime;
         const hasQuotable = quotableValue > 0;
-        
-        if (contributions.indexOf(contribution) < 3) {
-          console.log(`[ProcessContributions] Evaluando contribución:`, {
-            id: contribution.id,
-            monthYear: contribution.monthYear,
-            quotable: quotableValue,
-            isInRange,
-            hasQuotable
-          });
-        }
         
         return isInRange && hasQuotable;
       })
@@ -514,8 +484,6 @@ export class PreEvaluationService {
         gain: this.formatToEuropean(Number(contribution.gain) || 0),
         payable_liquid: this.formatToEuropean(Number(contribution.payableLiquid) || 0)
       }));
-
-    console.log(`[ProcessContributions] Contribuciones filtradas: ${recentContributions.length}`);
 
     return {
       affiliateId,
