@@ -372,7 +372,7 @@ export class PreEvaluationService {
       const contributionsResponse = await this.nats.firstValue('contributions.findByAffiliateId', affiliateId);
 
       // Extraer el array de contribuciones (puede venir directo o en .data)
-      let contributions = Array.isArray(contributionsResponse) 
+      const contributions = Array.isArray(contributionsResponse) 
         ? contributionsResponse 
         : contributionsResponse?.data || [];
 
@@ -1036,7 +1036,7 @@ export class PreEvaluationService {
     const periodInterest = Math.floor(cleanedValue * 100) / 100;
 
     // Datos originales
-    let minimumAmountModality = get(['minimum_amount_modality', 'minimumAmountModality']);
+    const minimumAmountModality = get(['minimum_amount_modality', 'minimumAmountModality']);
     let maximumAmountModality = get(['maximum_amount_modality', 'maximumAmountModality']);
 
     // OPTIMIZACIÓN: Ajuste especial para Fondo de Retiro con cache
