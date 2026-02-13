@@ -7,7 +7,7 @@ import { PreEvaluationModule } from './pre-evalution/pre-evaluation.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     CommonModule,
     AppMobileModule,
