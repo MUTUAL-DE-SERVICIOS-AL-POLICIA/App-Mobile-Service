@@ -12,6 +12,31 @@ Maneja datos como:
 
 ---
 
+## Estructura del Proyecto
+
+```
+src/
+├── app.module.ts                 # Módulo raíz que organiza todos los módulos de la aplicación
+├── main.ts                       # Punto de entrada principal de la aplicación
+├── app-mobile/                   # Módulo principal con lógica específica de operaciones móviles
+│   ├── controllers/              # Controladores que manejan las rutas HTTP
+│   ├── services/                 # Servicios con la lógica de negocio
+│   └── dto/                      # Data Transfer Objects para validación de datos
+├── common/                       # Código compartido reutilizable en toda la aplicación
+│   ├── filters/                  # Filtros para manejo de excepciones
+│   ├── guards/                   # Guards para autenticación y autorización
+│   └── decorators/               # Decoradores personalizados
+├── config/                       # Archivos de configuración (BD, variables ENV, etc)
+│   └── database.config.ts        # Configuración específica de PostgreSQL
+├── database/                     # Gestión de base de datos, migraciones y datos iniciales
+│   ├── migrations/               # Migraciones TypeORM para cambios en el esquema BD
+│   ├── seeds/                    # Seeders para llenar BD con datos de prueba
+│   └── entities/                 # Entidades (modelos) que representan tablas de la BD
+└── pre-evalution/                # Módulo para evaluación previa de solicitudes
+```
+
+---
+
 ## Clonar el repositorio y agregarle un nombre nuevo del nuevo proyecto
 
 ```bash
