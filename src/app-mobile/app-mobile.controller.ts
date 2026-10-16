@@ -182,4 +182,44 @@ export class AppMobileController {
       ecoComProcedureId,
     );
   }
+
+  // --- Fondo de retiro y cuota/auxilio mortuorio ---
+  // Delegan en AppMobileService, que llama por NATS al Gateway (patrones pvtBe.*).
+  @MessagePattern('appMobile.retFunRetirementFunds')
+  retFunRetirementFunds(
+    @Payload('authorization') authorization: string,
+    @Payload('affiliateId', ParseIntPipe) affiliateId: number,
+  ) {
+    return this.appMobileService.retFunRetirementFunds(authorization, affiliateId);
+  }
+
+  @MessagePattern('appMobile.retFunLiquidationPrint')
+  retFunLiquidationPrint(
+    @Payload('authorization') authorization: string,
+    @Payload('retirementFundId', ParseIntPipe) retirementFundId: number,
+  ) {
+    return this.appMobileService.retFunLiquidationPrint(
+      authorization,
+      retirementFundId,
+    );
+  }
+
+  @MessagePattern('appMobile.quotaAidMortuaries')
+  quotaAidMortuaries(
+    @Payload('authorization') authorization: string,
+    @Payload('affiliateId', ParseIntPipe) affiliateId: number,
+  ) {
+    return this.appMobileService.quotaAidMortuaries(authorization, affiliateId);
+  }
+
+  @MessagePattern('appMobile.quotaAidLiquidationPrint')
+  quotaAidLiquidationPrint(
+    @Payload('authorization') authorization: string,
+    @Payload('quotaAidId', ParseIntPipe) quotaAidId: number,
+  ) {
+    return this.appMobileService.quotaAidLiquidationPrint(
+      authorization,
+      quotaAidId,
+    );
+  }
 }
