@@ -258,15 +258,15 @@ export class AppMobileService {
     const stores: Record<string, { url: string; validVersions: string[] }> = {
       playstore: {
         url: 'https://play.google.com/store/apps/details?id=com.muserpol.pvt',
-        validVersions: ['4.1.2','4.1.3'],
+        validVersions: ['4.1.3','4.2.0'],
       },
       appstore: {
         url: 'https://apps.apple.com/app/id284815942',
-        validVersions: ['4.1.2','4.1.3'],
+        validVersions: ['4.1.3','4.2.0'],
       },
       appgallery: {
         url: 'https://appgallery.huawei.com/app/C106440831',
-        validVersions: ['4.1.2','4.1.3'],
+        validVersions: ['4.1.3','4.2.0'],
       },
     };
 
@@ -535,5 +535,90 @@ export class AppMobileService {
       };
     }
     return data;
+  }
+
+  // Lista los trámites de fondo de retiro del afiliado (Gateway -> API de PVT-BE).
+  async retFunRetirementFunds(authorization: string, affiliateId: number) {
+    const data = await this.nats.firstValue('pvtBe.retFunRetirementFunds', {
+      authorization,
+      affiliateId,
+    });
+
+    if (!data.serviceStatus) {
+      return {
+        message: 'Error en el servicio pvtBe.retFunRetirementFunds',
+        error: true,
+      };
+    }
+    return data;
+  }
+
+  // El Gateway devuelve el PDF en base64 (`data.content`); se expone como { name, binaryPdf }.
+  async retFunLiquidationPrint(
+    authorization: string,
+    retirementFundId: number,
+  ) {
+    const response = await this.nats.firstValue(
+      'pvtBe.retFunLiquidationPrint',
+      { authorization, retirementFundId },
+    );
+    const { serviceStatus } = response;
+
+    if (!serviceStatus) {
+      return {
+        message:
+          response.message ??
+          'Error en el servicio pvtBe.retFunLiquidationPrint',
+        error: true,
+      };
+    }
+
+    const { data: dataResponse } = response;
+    return {
+      name: dataResponse.filename,
+      binaryPdf: dataResponse.content,
+      serviceStatus: response.serviceStatus,
+    };
+  }
+
+  // Lista los trámites de cuota y auxilio mortuorio del afiliado (Gateway -> API de PVT-BE).
+  async quotaAidMortuaries(authorization: string, affiliateId: number) {
+    const data = await this.nats.firstValue('pvtBe.quotaAidMortuaries', {
+      authorization,
+      affiliateId,
+    });
+
+    if (!data.serviceStatus) {
+      return {
+        message: 'Error en el servicio pvtBe.quotaAidMortuaries',
+        error: true,
+      };
+    }
+    return data;
+  }
+
+  // El Gateway devuelve el PDF en base64 (`data.content`); se expone como { name, binaryPdf }.
+  async quotaAidLiquidationPrint(authorization: string, quotaAidId: number) {
+    const response = await this.nats.firstValue(
+      'pvtBe.quotaAidLiquidationPrint',
+      { authorization, quotaAidId },
+    );
+    const { serviceStatus } = response;
+
+    if (!serviceStatus) {
+      return {
+        message:
+          response.message ??
+          'Error en el servicio pvtBe.quotaAidLiquidationPrint',
+        error: true,
+      };
+    }
+
+    const { data: dataResponse } = response;
+    return {
+      name: dataResponse.filename,
+      binaryPdf: dataResponse.content,
+      serviceStatus: response.serviceStatus,
+    };
   }
 }
