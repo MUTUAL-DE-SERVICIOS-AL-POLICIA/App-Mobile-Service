@@ -105,7 +105,7 @@ export class PreEvaluationService {
         category,
       };
     } catch (error) {
-      this.logger.error(`Error al consultar afiliado: ${error.message}`);
+      this.logger.error(`Error al consultar afiliado: ${error}`);
       throw new Error('Error al consultar afiliado');
     }
   }
@@ -402,22 +402,7 @@ export class PreEvaluationService {
       };
 
     } catch (error) {
-      this.logger.error(`Error en getRecentContributions: ${error.message}`);
-      
-      // Si el error es por no encontrar contribuciones, retornar respuesta vacía exitosa
-      if (error.message?.includes('No se encontraron aportes')) {
-        return {
-          error: "false",
-          message: "No se encontraron contribuciones para el afiliado",
-          payload: {
-            affiliateId,
-            total_contributions: 0,
-            contributions: [],
-            period: this.getThreeMonthsPeriod()
-          },
-          serviceStatus: true
-        };
-      }
+      this.logger.error(`Error en getRecentContributions: ${error}`);
 
       return {
         error: "true",
@@ -595,7 +580,7 @@ export class PreEvaluationService {
       };
 
     } catch (error) {
-      this.logger.error(`Error al obtener promedio de fondo de retiro: ${error.message}`);
+      this.logger.error(`Error al obtener promedio de fondo de retiro: ${error}`);
       return {
         error: "true",
         message: "Error interno del servidor",
@@ -651,7 +636,7 @@ export class PreEvaluationService {
       const pensionData = pensionResp?.data ?? pensionResp ?? {};
       return pensionData?.isActive ? (pensionData.type ?? pensionData.name ?? null) : null;
     } catch (err) {
-      this.logger.debug(`No se pudo resolver pension_entity_name para affiliateId ${affiliateId}: ${err?.message ?? err}`);
+      this.logger.debug(`No se pudo resolver pension_entity_name para affiliateId ${affiliateId}: ${err}`);
       return null;
     }
   }
@@ -684,7 +669,7 @@ export class PreEvaluationService {
       );
       return paramsBatchResp?.data ?? paramsBatchResp ?? [];
     } catch (err) {
-      this.logger.debug(`Error fetching loan modality parameters batch: ${err?.message ?? String(err)}`);
+      this.logger.debug(`Error fetching loan modality parameters batch: ${err ?? String(err)}`);
       return [];
     }
   }
@@ -708,7 +693,7 @@ export class PreEvaluationService {
         interests: resp?.data ?? resp ?? []
       }));
     } catch (err) {
-      this.logger.debug(`Error fetching loan interests batch: ${err?.message ?? String(err)}`);
+      this.logger.debug(`Error fetching loan interests batch: ${err ?? String(err)}`);
       return [];
     }
   }
@@ -1098,41 +1083,35 @@ export class PreEvaluationService {
     minimumAmount: number,
     maximumAmount: number
   ): Promise<number> {
-    try {
-      // OPTIMIZACIÓN: Obtener modalidad y promedio en paralelo
-      const [modalityResponse, retirementAvgResp] = await Promise.all([
-        this.nats.firstValue('procedureModalities.findOne', { id: procedureModalityId }),
-        this.getRetirementFundAverage(affiliateId)
-      ]);
+    const [modalityResponse, retirementAvgResp] = await Promise.all([
+      this.nats.firstValue('procedureModalities.findOne', { id: procedureModalityId }),
+      this.getRetirementFundAverage(affiliateId)
+    ]);
 
-      const modalityName = modalityResponse?.data?.name ?? modalityResponse?.name ?? '';
+    const modalityName = modalityResponse?.data?.name ?? modalityResponse?.name ?? '';
 
-      if (!/fondo\s+de\s+retiro/i.test(modalityName)) {
-        return maximumAmount; // No es fondo de retiro, mantener original
-      }
-
-      const avgValue = Number(retirementAvgResp?.payload?.average_amount ?? retirementAvgResp?.payload ?? 0);
-
-      if (avgValue <= 0) {
-        return maximumAmount; // Sin promedio válido, mantener original
-      }
-
-      // Aplicar reglas de ajuste
-      if (minimumAmount === 0 && maximumAmount === 70000 && avgValue === 130000) {
-        // Caso 1: mantener igual
-        this.logger.debug(`Fondo de Retiro: se mantiene máximo original (${maximumAmount})`);
-        return maximumAmount;
-      } else if (maximumAmount > avgValue) {
-        // Casos 2 y 3: ajustar máximo al promedio
-        this.logger.debug(`Fondo de Retiro: máximo modificado de ${maximumAmount} → ${avgValue}`);
-        return avgValue;
-      }
-
-      return maximumAmount;
-    } catch (error) {
-      this.logger.warn(`No se pudo ajustar máximo por fondo de retiro: ${error.message}`);
-      return maximumAmount;
+    if (!/fondo\s+de\s+retiro/i.test(modalityName)) {
+      return maximumAmount; // No es fondo de retiro, mantener original
     }
+
+    const avgValue = Number(retirementAvgResp?.payload?.average_amount ?? retirementAvgResp?.payload ?? 0);
+
+    if (avgValue <= 0) {
+      return maximumAmount; // Sin promedio válido, mantener original
+    }
+
+    // Aplicar reglas de ajuste
+    if (minimumAmount === 0 && maximumAmount === 70000 && avgValue === 130000) {
+      // Caso 1: mantener igual
+      this.logger.debug(`Fondo de Retiro: se mantiene máximo original (${maximumAmount})`);
+      return maximumAmount;
+    } else if (maximumAmount > avgValue) {
+      // Casos 2 y 3: ajustar máximo al promedio
+      this.logger.debug(`Fondo de Retiro: máximo modificado de ${maximumAmount} → ${avgValue}`);
+      return avgValue;
+    }
+
+    return maximumAmount;
   }
 
 }
